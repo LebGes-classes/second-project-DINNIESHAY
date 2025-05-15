@@ -139,4 +139,18 @@ public class StoragesAccess implements Access<Storage> {
 
         return id;
     }
+
+    public String getType(Storage storage) throws SQLException {
+        String type = null;
+        String sql = "SELECT Type FROM Storages WHERE ID = " + storage.id;
+
+        try (Statement stmt = DataBase.getConnection().createStatement();
+             ResultSet set = stmt.executeQuery(sql)) {
+            if (set.next()) {
+                type = set.getString("Type");
+            }
+        }
+
+        return type;
+    }
 }

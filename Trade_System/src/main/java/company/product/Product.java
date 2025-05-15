@@ -62,8 +62,6 @@ public class Product {
                 ", name: " + name +
                 ", sellPrice: " + sellPrice +
                 ", storageId: " + storageId +
-                ", cellId: " + cellId +
-                ", producerId: " + producerId +
-                "\n";
+                ", cellId: " + cellId;
     }
 }

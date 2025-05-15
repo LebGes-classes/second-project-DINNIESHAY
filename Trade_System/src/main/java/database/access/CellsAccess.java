@@ -82,6 +82,7 @@ public class CellsAccess implements Access<Cell> {
                 cell = new Cell();
                 cell.setId(set.getInt("ID"));
                 cell.setStorageId(set.getInt("Storage_id"));
+                cell.setQuantity(set.getInt("Product_quantity"));
             }
         }
 
