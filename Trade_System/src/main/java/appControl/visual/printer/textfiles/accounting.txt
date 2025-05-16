@@ -1,5 +1,7 @@
-           ACCOUNTING
--1- Get information about sale point profit
--2- Get information about company profit
 
--B- Go back to menu
+
+           𝐀𝐂𝐂𝐎𝐔𝐍𝐓𝐈𝐍𝐆
+-𝟷- 𝙶𝚎𝚝 𝚒𝚗𝚏𝚘𝚛𝚖𝚊𝚝𝚒𝚘𝚗 𝚊𝚋𝚘𝚞𝚝 𝚜𝚊𝚕𝚎 𝚙𝚘𝚒𝚗𝚝 𝚙𝚛𝚘𝚏𝚒𝚝
+-𝟸- 𝙶𝚎𝚝 𝚒𝚗𝚏𝚘𝚛𝚖𝚊𝚝𝚒𝚘𝚗 𝚊𝚋𝚘𝚞𝚝 𝚌𝚘𝚖𝚙𝚊𝚗𝚢 𝚙𝚛𝚘𝚏𝚒𝚝
+
+-𝙱- 𝙶𝚘 𝚋𝚊𝚌𝚔 𝚝𝚘 𝚖𝚎𝚗𝚞
