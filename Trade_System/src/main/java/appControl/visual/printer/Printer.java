@@ -25,4 +25,8 @@ public class Printer {
     public void printWorkerManagement() {
         Services.printFile(new File("Trade_System/src/main/java/appControl/visual/printer/textfiles/worker_management.txt"));
     }
+
+    public void printAccounting() {
+        Services.printFile(new File("Trade_System/src/main/java/appControl/visual/printer/textfiles/accounting.txt"));
+    }
 }

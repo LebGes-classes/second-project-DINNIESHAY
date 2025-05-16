@@ -5,16 +5,16 @@ import company.user.User;
 public class Worker extends User {
 
     public int workPlaceId;
+    public String status;
 
     public Worker() {}
 
-    public Worker(int id, String firstName, String lastName, String phoneNumber, int workPlaceId) {
-        super(id, firstName, lastName, phoneNumber);
+    public void setWorkPlaceId(int workPlaceId) {
         this.workPlaceId = workPlaceId;
     }
 
-    public void setWorkPlaceId(int workPlaceId) {
-        this.workPlaceId = workPlaceId;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -25,6 +25,7 @@ public class Worker extends User {
                 ", lastName: " + lastName +
                 ", phoneNumber: " + phoneNumber +
                 ", workPlaceId: " + workPlaceId +
+                ", status: " + status +
                 "\n";
     }
 }

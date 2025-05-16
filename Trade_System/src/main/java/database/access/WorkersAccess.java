@@ -12,25 +12,27 @@ import java.util.ArrayList;
 public class WorkersAccess implements Access<Worker> {
 
     public void add(Worker worker) throws SQLException {
-        String sql = "INSERT INTO Workers (First_name, Last_name, Phone_number, Work_place_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Workers (First_name, Last_name, Phone_number, Work_place_id, Status) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
             pstmt.setString(1, worker.firstName);
             pstmt.setString(2, worker.lastName);
             pstmt.setString(3, worker.phoneNumber);
             pstmt.setInt(4, worker.workPlaceId);
+            pstmt.setString(5, worker.status);
             pstmt.executeUpdate();
         }
     }
 
     public void update(Worker worker) throws SQLException {
-        String sql = "UPDATE Workers SET First_name = ?, Last_name = ?, Phone_number = ?, Work_place_id = ? WHERE ID = ?";
+        String sql = "UPDATE Workers SET First_name = ?, Last_name = ?, Phone_number = ?, Work_place_id = ?, Status = ? WHERE ID = ?";
 
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
             pstmt.setString(1, worker.firstName);
             pstmt.setString(2, worker.lastName);
             pstmt.setString(3, worker.phoneNumber);
             pstmt.setInt(4, worker.workPlaceId);
-            pstmt.setInt(5, worker.id);
+            pstmt.setString(5, worker.status);
+            pstmt.setInt(6, worker.id);
             pstmt.executeUpdate();
         }
     }
@@ -55,6 +57,7 @@ public class WorkersAccess implements Access<Worker> {
                 worker.setLastName(set.getString("Last_name"));
                 worker.setPhoneNumber(set.getString("Phone_number"));
                 worker.setWorkPlaceId(set.getInt("Work_place_id"));
+                worker.setStatus(set.getString("Status"));
                 workers.add(worker);
             }
         }
@@ -75,6 +78,7 @@ public class WorkersAccess implements Access<Worker> {
                 worker.setLastName(set.getString("Last_name"));
                 worker.setPhoneNumber(set.getString("Phone_number"));
                 worker.setWorkPlaceId(set.getInt("Work_place_id"));
+                worker.setStatus(set.getString("Status"));
                 workers.add(worker);
             }
         }
@@ -95,6 +99,7 @@ public class WorkersAccess implements Access<Worker> {
                 worker.setLastName(set.getString("Last_name"));
                 worker.setPhoneNumber(set.getString("Phone_number"));
                 worker.setWorkPlaceId(set.getInt("Work_place_id"));
+                worker.setStatus(set.getString("Status"));
             }
         }
 

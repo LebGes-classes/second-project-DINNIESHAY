@@ -1,9 +1,6 @@
 package appControl;
 
-import appControl.manager.OrdersManager;
-import appControl.manager.ProductsManager;
-import appControl.manager.StoragesManager;
-import appControl.manager.WorkersManager;
+import appControl.manager.*;
 import appControl.visual.services.Services;
 import appControl.visual.printer.Printer;
 import database.connection.DataBase;
@@ -40,6 +37,9 @@ public class AppController {
                     break;
                 case "4":
                     manageWorkers();
+                    break;
+                case "5":
+                    showAccounting();
                     break;
                 case "E", "e":
                     isRunning = false;
@@ -183,7 +183,30 @@ public class AppController {
                     managing = false;
                     break;
                 default:
-                    System.out.println("Wrong choice. Try again.");
+                    System.out.println("Wrong choice. Try again.\n");
+            }
+        }
+    }
+
+    private  void showAccounting() throws SQLException {
+        boolean managing = true;
+
+        while (managing) {
+            printer.printAccounting();
+            String choice = Services.getInput();
+
+            switch (choice) {
+                case "1":
+                    AccountingManager.printSalePointRevenue();
+                    break;
+                case "2":
+                    AccountingManager.printCompanyRevenue();
+                    break;
+                case "B", "b":
+                    managing = false;
+                    break;
+                default:
+                    System.out.println("Wrong choice. Try again.\n");
             }
         }
     }

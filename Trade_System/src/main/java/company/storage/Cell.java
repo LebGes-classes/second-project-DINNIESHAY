@@ -4,6 +4,7 @@ public class Cell {
 
     public int id;
     public int storageId;
+    public int  productId;
     public int productQuantity;
 
     public Cell() {}
@@ -24,12 +25,17 @@ public class Cell {
         this.productQuantity = quantity;
     }
 
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
     @Override
     public String toString() {
         return "Cell " +
                 "id: " + id +
                 ", storageId: " + storageId +
-                ", quantity: " + productQuantity +
+                ", productId: " + productId +
+                ", productQuantity: " + productQuantity +
                 "\n";
     }
 }

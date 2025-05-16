@@ -9,28 +9,33 @@ import java.util.ArrayList;
 public class OrdersAccess implements Access<Order> {
 
     public void add(Order order) throws SQLException {
-        String sql = "INSERT INTO Orders (Buyer_id, Product_id, Quantity, Total_price, Date, Worker_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Orders (Status, Buyer_id, Product_id, Quantity, Total_price, Date, Worker_id, Sale_point_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
-            pstmt.setInt(1, order.buyerId);
-            pstmt.setInt(2, order.productId);
-            pstmt.setInt(3, order.quantity);
-            pstmt.setDouble(4, order.totalPrice);
-            pstmt.setTimestamp(5, Timestamp.valueOf(order.date));
-            pstmt.setInt(6, order.workerId);
+            pstmt.setString(1, order.status);
+            pstmt.setInt(2, order.buyerId);
+            pstmt.setInt(3, order.productId);
+            pstmt.setInt(4, order.quantity);
+            pstmt.setDouble(5, order.totalPrice);
+            pstmt.setTimestamp(6, Timestamp.valueOf(order.date));
+            pstmt.setInt(7, order.workerId);
+            pstmt.setInt(8, order.salePointId);
             pstmt.executeUpdate();
         }
     }
 
     public void update(Order order) throws SQLException {
-        String sql = "UPDATE Orders SET Buyer_id = ?, Product_id = ?, Quantity = ?, Total_price = ?, Date = ?, Worker_id = ? WHERE ID = ?";
+        String sql = "UPDATE Orders SET Status = ?, Buyer_id = ?, Product_id = ?, Quantity = ?, Total_price = ?, Date = ?, Worker_id = ?, Sale_point_id = ? WHERE ID = ?";
 
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
-            pstmt.setInt(1, order.buyerId);
-            pstmt.setInt(2, order.productId);
-            pstmt.setInt(3, order.quantity);
-            pstmt.setDouble(4, order.totalPrice);
-            pstmt.setTimestamp(5, Timestamp.valueOf(order.date));
-            pstmt.setInt(6, order.id);
+            pstmt.setString(1, order.status);
+            pstmt.setInt(2, order.buyerId);
+            pstmt.setInt(3, order.productId);
+            pstmt.setInt(4, order.quantity);
+            pstmt.setDouble(5, order.totalPrice);
+            pstmt.setTimestamp(6, Timestamp.valueOf(order.date));
+            pstmt.setInt(7, order.workerId);
+            pstmt.setInt(8, order.salePointId);
+            pstmt.setInt(9, order.id);
             pstmt.executeUpdate();
         }
     }
@@ -52,11 +57,14 @@ public class OrdersAccess implements Access<Order> {
             while (set.next()) {
                 Order order = new Order();
                 order.setId(set.getInt("ID"));
+                order.setStatus(set.getString("Status"));
                 order.setBuyerId(set.getInt("Buyer_id"));
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
                 order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setWorkerId(set.getInt("Worker_id"));
+                order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
             }
         }
@@ -74,11 +82,14 @@ public class OrdersAccess implements Access<Order> {
             while (set.next()) {
                 Order order = new Order();
                 order.setId(set.getInt("ID"));
+                order.setStatus(set.getString("Status"));
                 order.setBuyerId(set.getInt("Buyer_id"));
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
                 order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setWorkerId(set.getInt("Worker_id"));
+                order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
             }
         }
@@ -96,11 +107,14 @@ public class OrdersAccess implements Access<Order> {
             if (set.next()) {
                 order = new Order();
                 order.setId(set.getInt("ID"));
+                order.setStatus(set.getString("Status"));
                 order.setBuyerId(set.getInt("Buyer_id"));
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
                 order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setWorkerId(set.getInt("Worker_id"));
+                order.setSalePointId(set.getInt("Sale_point_id"));
             }
         }
 
@@ -114,14 +128,17 @@ public class OrdersAccess implements Access<Order> {
 
         try (Statement stmt = DataBase.getConnection().createStatement();
              ResultSet set = stmt.executeQuery(sql)) {
-            if (set.next()) {
+            while (set.next()) {
                 Order order = new Order();
                 order.setId(set.getInt("ID"));
+                order.setStatus(set.getString("Status"));
                 order.setBuyerId(set.getInt("Buyer_id"));
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
                 order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setWorkerId(set.getInt("Worker_id"));
+                order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
             }
         }
@@ -136,14 +153,17 @@ public class OrdersAccess implements Access<Order> {
 
         try (Statement stmt = DataBase.getConnection().createStatement();
              ResultSet set = stmt.executeQuery(sql)) {
-            if (set.next()) {
+            while (set.next()) {
                 Order order = new Order();
                 order.setId(set.getInt("ID"));
+                order.setStatus(set.getString("Status"));
                 order.setBuyerId(set.getInt("Buyer_id"));
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
                 order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setWorkerId(set.getInt("Worker_id"));
+                order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
             }
         }

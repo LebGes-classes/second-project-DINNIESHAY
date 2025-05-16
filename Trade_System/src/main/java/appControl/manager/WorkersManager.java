@@ -39,13 +39,14 @@ public class WorkersManager {
             }
         }
         worker.setWorkPlaceId(Integer.parseInt(Services.getInput()));
+        worker.setStatus("Staff");
 
         workersAccess.add(worker);
     }
 
     public static void fireWorker() throws SQLException {
         System.out.println("Choose worker to fire:\n");
-        ArrayList<Worker> workers = workersAccess.getAll("Work_place_id > 0");
+        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff' OR Status = 'Admin'");
         if (workers.isEmpty()) {
             System.out.println("No workers");
             System.out.println("\nPress any key to go back");
@@ -57,14 +58,20 @@ public class WorkersManager {
             }
         }
         Worker workerToFire = workersAccess.getById(Integer.parseInt(Services.getInput()));
-        workerToFire.setWorkPlaceId(0);
+        workerToFire.setStatus("Fired");
+
+        SalePoint salePoint = salePointsAccess.getById(salePointsAccess.getId("Admin_id = " + workerToFire.id));
+        if (salePoint != null) {
+            salePoint.setAdminId(0);
+            salePointsAccess.update(salePoint);
+        }
 
         workersAccess.update(workerToFire);
     }
 
     public static void changeWorkPlace() throws SQLException {
         System.out.println("Choose worker to change his work place:\n");
-        ArrayList<Worker> workers = workersAccess.getAll("Work_place_id > 0");
+        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff'");
         if (workers.isEmpty()) {
             System.out.println("No workers");
             System.out.println("\nPress any key to go back");
@@ -95,7 +102,7 @@ public class WorkersManager {
     }
 
     public static void printAllWorkers() throws SQLException {
-        ArrayList<Worker> workers = workersAccess.getAll("Work_place_id > 0");
+        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff' OR Status = 'Admin'");
         if (workers.isEmpty()) {
             System.out.println("No workers");
         } else {

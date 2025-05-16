@@ -11,17 +11,10 @@ public class Order {
     public double totalPrice;
     public LocalDateTime date;
     public int workerId;
+    public int salePointId;
+    public String status;
 
     public Order() {}
-
-    public Order(int buyerId, int productId, int quantity, double totalPrice, int workerId) {
-        this.buyerId = buyerId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.totalPrice = totalPrice;
-        this.date = LocalDateTime.now();
-        this.workerId = workerId;
-    }
 
     public void setId(int id) {
         this.id = id;
@@ -51,15 +44,26 @@ public class Order {
         this.workerId = workerId;
     }
 
+    public void setSalePointId(int salePointId) {
+        this.salePointId = salePointId;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Order " +
                 "id: " + id +
+                ", status: " + status +
                 ", buyerId: " + buyerId +
                 ", productId: " + productId +
-                ", quantity: " + quantity +
-                ", totalPrice: " + totalPrice +
+                ", product quantity: " + quantity +
+                ", total price: " + totalPrice +
                 ", date: " + date +
+                ", workerId: " + workerId +
+                ", salePointId: " + salePointId +
                 "\n";
     }
 }

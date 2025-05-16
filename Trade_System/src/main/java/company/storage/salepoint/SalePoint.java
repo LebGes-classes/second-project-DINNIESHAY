@@ -9,12 +9,6 @@ public class SalePoint extends Storage {
 
     public SalePoint() {}
 
-    public SalePoint(int id, String street, int adminId) {
-        super(id, street);
-        this.adminId = adminId;
-        this.revenue = 0.0;
-    }
-
     public void setAdminId(int adminId) {
         this.adminId = adminId;
     }
@@ -35,8 +29,8 @@ public class SalePoint extends Storage {
     public String toString() {
         return "SalePoint " +
                 "id: " + id +
+                ", street: " + street +
                 ", adminId: " + adminId +
-                ", revenue: " + revenue +
                 "\n";
     }
 }

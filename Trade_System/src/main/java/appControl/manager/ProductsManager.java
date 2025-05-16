@@ -25,7 +25,8 @@ public class ProductsManager {
             System.out.println("No products available");
         } else {
             for (Product product : products) {
-                System.out.print(product);
+                int quantity = cellsAccess.getTotalQuantityOfProduct(product.id);
+                System.out.println(product + ", quantity: " + quantity);
             }
         }
 
@@ -39,7 +40,7 @@ public class ProductsManager {
             System.out.println("No products sold");
         } else {
             for (Product product : products) {
-                System.out.print(product);
+                System.out.println(product);
             }
         }
 
@@ -71,18 +72,16 @@ public class ProductsManager {
             return;
         } else {
             for (Storage warehouse: warehouses) {
-                System.out.print(warehouse);
+                System.out.println(warehouse);
             }
         }
         int warehouseId = Integer.parseInt(Services.getInput());
-        product.setStorageId(warehouseId);
 
         Cell cell = new Cell(warehouseId);
+
         System.out.println("Enter quantity: ");
         int quantity = Integer.parseInt(Services.getInput());
         cell.setQuantity(quantity);
-        cellsAccess.add(cell);
-        product.setCellId(cellsAccess.getLastAddedId());
 
         Producer producer = new Producer();
         System.out.println("Enter producer name: ");
@@ -94,6 +93,8 @@ public class ProductsManager {
         product.setStatus("Available");
 
         productsAccess.add(product);
+        cell.setProductId(productsAccess.getLastAddedId());
+        cellsAccess.add(cell);
     }
 
     public static void purchaseProduct() throws SQLException {
@@ -106,7 +107,7 @@ public class ProductsManager {
             return;
         } else {
             for (Product product : products) {
-                System.out.print(product);
+                System.out.println(product);
             }
         }
         Product product = productsAccess.getById(Integer.parseInt(Services.getInput()));
@@ -120,25 +121,31 @@ public class ProductsManager {
             return;
         } else {
             for (Storage warehouse: warehouses) {
-                System.out.print(warehouse);
+                System.out.println(warehouse);
             }
         }
         int warehouseId = Integer.parseInt(Services.getInput());
-        product.setStorageId(warehouseId);
 
-        Cell cell = new Cell(warehouseId);
         System.out.println("Enter quantity: ");
         int quantity = Integer.parseInt(Services.getInput());
-        cell.setQuantity(quantity);
-        cellsAccess.add(cell);
-        product.setCellId(cellsAccess.getLastAddedId());
+
+        Cell cell = cellsAccess.getById(cellsAccess.getId("Storage_id = " + warehouseId + " AND Product_id = " + product.id));
+        if (cell != null) {
+            cell.setQuantity(cell.productQuantity + quantity);
+            cellsAccess.update(cell);
+        } else {
+            cell = new Cell(warehouseId);
+            cell.setProductId(product.id);
+            cell.setQuantity(quantity);
+            cellsAccess.add(cell);
+        }
 
         product.setStatus("Available");
 
         productsAccess.update(product);
     }
 
-    public static void moveToSalePoint() throws SQLException { //удалить старую ячейку
+    public static void moveToSalePoint() throws SQLException {
         System.out.println("Choose warehouse:\n");
         ArrayList<Storage> warehouses = storagesAccess.getAll("Type = 'Warehouse'");
         if (warehouses.isEmpty()) {
@@ -148,13 +155,18 @@ public class ProductsManager {
             return;
         } else {
             for (Storage warehouse: warehouses) {
-                System.out.print(warehouse);
+                System.out.println(warehouse);
             }
         }
         int warehouseId = Integer.parseInt(Services.getInput());
 
         System.out.println("Choose product that you want to move to sale point:\n");
-        ArrayList<Product> products = productsAccess.getAll("Status = 'Available' AND Storage_id = '" + warehouseId + "'");
+        ArrayList<Cell> cells = cellsAccess.getAll("Storage_id = " + warehouseId);
+        ArrayList<Product> products = new ArrayList<>();
+        for (Cell cell : cells) {
+            Product product = productsAccess.getById(cell.productId);
+            products.add(product);
+        }
         if (products.isEmpty()) {
             System.out.println("No product available");
             System.out.println("\nPress any key to go back");
@@ -162,10 +174,24 @@ public class ProductsManager {
             return;
         } else {
             for (Product product : products) {
-                System.out.print(product);
+                System.out.println(product);
             }
         }
         Product product = productsAccess.getById(Integer.parseInt(Services.getInput()));
+
+        Cell oldCell = cellsAccess.getById(cellsAccess.getId("Product_id = " + product.id + " AND Storage_id = " + warehouseId));
+        System.out.println("Available: " + oldCell.productQuantity);
+        System.out.println("Enter quantity: ");
+        int quantity = Integer.parseInt(Services.getInput());
+        while (quantity > oldCell.productQuantity) {
+            System.out.println("Wrong quantity! Try again!");
+            quantity = Integer.parseInt(Services.getInput());
+        }
+        oldCell.setQuantity(oldCell.productQuantity - quantity);
+        if (oldCell.productQuantity == 0) {
+            cellsAccess.delete(oldCell.id);
+        }
+        cellsAccess.update(oldCell);
 
         System.out.println("Choose sale point:\n");
         ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
@@ -180,15 +206,17 @@ public class ProductsManager {
             }
         }
         int salePointId = Integer.parseInt((Services.getInput()));
-        product.setStorageId(salePointId);
 
-        Cell cell = new Cell();
-        cell.setStorageId(salePointId);
-        cellsAccess.add(cell);
-        cell.setId(cellsAccess.getLastAddedId());
-        product.setCellId(cell.id);
-
-        productsAccess.update(product);
+        Cell newCell = cellsAccess.getById(cellsAccess.getId("Storage_id = " + salePointId + " AND Product_id = " + product.id));
+        if (newCell != null) {
+            newCell.setQuantity(newCell.productQuantity + quantity);
+            cellsAccess.update(newCell);
+        } else {
+            newCell = new Cell(salePointId);
+            newCell.setQuantity(quantity);
+            newCell.setProductId(product.id);
+            cellsAccess.add(newCell);
+        }
     }
 
     public static void moveToWarehouse() throws SQLException {
@@ -206,8 +234,13 @@ public class ProductsManager {
         }
         int salePointId = Integer.parseInt(Services.getInput());
 
-        System.out.println("Choose product that you want to move to warehouse:\n");
-        ArrayList<Product> products = productsAccess.getAll("Status = 'Available' AND Storage_id = '" + salePointId + "'");
+        System.out.println("Choose product that you want to move to sale point:\n");
+        ArrayList<Cell> cells = cellsAccess.getAll("Storage_id = " + salePointId);
+        ArrayList<Product> products = new ArrayList<>();
+        for (Cell cell : cells) {
+            Product product = productsAccess.getById(cell.productId);
+            products.add(product);
+        }
         if (products.isEmpty()) {
             System.out.println("No product available");
             System.out.println("\nPress any key to go back");
@@ -215,10 +248,24 @@ public class ProductsManager {
             return;
         } else {
             for (Product product : products) {
-                System.out.print(product);
+                System.out.println(product);
             }
         }
         Product product = productsAccess.getById(Integer.parseInt(Services.getInput()));
+
+        Cell oldCell = cellsAccess.getById(cellsAccess.getId("Product_id = " + product.id + " AND Storage_id = " + salePointId));
+        System.out.println("Available: " + oldCell.productQuantity);
+        System.out.println("Enter quantity: ");
+        int quantity = Integer.parseInt(Services.getInput());
+        while (quantity > oldCell.productQuantity) {
+            System.out.println("Wrong quantity! Try again!");
+            quantity = Integer.parseInt(Services.getInput());
+        }
+        oldCell.setQuantity(oldCell.productQuantity - quantity);
+        if (oldCell.productQuantity == 0) {
+            cellsAccess.delete(oldCell.id);
+        }
+        cellsAccess.update(oldCell);
 
         System.out.println("Choose warehouse:\n");
         ArrayList<Storage> warehouses = storagesAccess.getAll("Type = 'Warehouse'");
@@ -229,19 +276,21 @@ public class ProductsManager {
             return;
         } else {
             for (Storage warehouse: warehouses) {
-                System.out.print(warehouse);
+                System.out.println(warehouse);
             }
         }
         int warehouseId = Integer.parseInt((Services.getInput()));
-        product.setStorageId(warehouseId);
 
-        Cell cell = new Cell();
-        cell.setStorageId(warehouseId);
-        cellsAccess.add(cell);
-        cell.setId(cellsAccess.getLastAddedId());
-        product.setCellId(cell.id);
-
-        productsAccess.update(product);
+        Cell newCell = cellsAccess.getById(cellsAccess.getId("Storage_id = " + warehouseId + " AND Product_id = " + product.id));
+        if (newCell != null) {
+            newCell.setQuantity(newCell.productQuantity + quantity);
+            cellsAccess.update(newCell);
+        } else {
+            newCell = new Cell(warehouseId);
+            newCell.setQuantity(quantity);
+            newCell.setProductId(product.id);
+            cellsAccess.add(newCell);
+        }
     }
 
     public static void moveToOtherSalePoint() throws SQLException {
@@ -259,8 +308,13 @@ public class ProductsManager {
         }
         int oldSalePointId = Integer.parseInt(Services.getInput());
 
-        System.out.println("Choose product that you want to move to other sale point:\n");
-        ArrayList<Product> products = productsAccess.getAll("Status = 'Available' AND Storage_id = '" + oldSalePointId + "'");
+        System.out.println("Choose product that you want to move to sale point:\n");
+        ArrayList<Cell> cells = cellsAccess.getAll("Storage_id = " + oldSalePointId);
+        ArrayList<Product> products = new ArrayList<>();
+        for (Cell cell : cells) {
+            Product product = productsAccess.getById(cell.productId);
+            products.add(product);
+        }
         if (products.isEmpty()) {
             System.out.println("No product available");
             System.out.println("\nPress any key to go back");
@@ -268,12 +322,12 @@ public class ProductsManager {
             return;
         } else {
             for (Product product : products) {
-                System.out.print(product);
+                System.out.println(product);
             }
         }
         Product product = productsAccess.getById(Integer.parseInt(Services.getInput()));
 
-        System.out.println("Choose new sale point:\n");
+        System.out.println("Choose sale point:\n");
         if (salePoints.isEmpty()) {
             System.out.println("No sale points");
             System.out.println("\nPress any key to go back");
@@ -284,15 +338,31 @@ public class ProductsManager {
                 System.out.print(salePoint);
             }
         }
-        int newSalePointId = Integer.parseInt((Services.getInput()));
-        product.setStorageId(newSalePointId);
+        int salePointId = Integer.parseInt((Services.getInput()));
 
-        Cell cell = new Cell();
-        cell.setStorageId(newSalePointId);
-        cellsAccess.add(cell);
-        cell.setId(cellsAccess.getLastAddedId());
-        product.setCellId(cell.id);
+        Cell oldCell = cellsAccess.getById(cellsAccess.getId("Product_id = " + product.id + " AND Storage_id = " + oldSalePointId));
+        System.out.println("Available: " + oldCell.productQuantity);
+        System.out.println("Enter quantity: ");
+        int quantity = Integer.parseInt(Services.getInput());
+        while (quantity > oldCell.productQuantity) {
+            System.out.println("Wrong quantity! Try again!");
+            quantity = Integer.parseInt(Services.getInput());
+        }
+        oldCell.setQuantity(oldCell.productQuantity - quantity);
+        if (oldCell.productQuantity == 0) {
+            cellsAccess.delete(oldCell.id);
+        }
+        cellsAccess.update(oldCell);
 
-        productsAccess.update(product);
+        Cell newCell = cellsAccess.getById(cellsAccess.getId("Storage_id = " + salePointId + " AND Product_id = " + product.id));
+        if (newCell != null) {
+            newCell.setQuantity(newCell.productQuantity + quantity);
+            cellsAccess.update(newCell);
+        } else {
+            newCell = new Cell(salePointId);
+            newCell.setQuantity(quantity);
+            newCell.setProductId(product.id);
+            cellsAccess.add(newCell);
+        }
     }
 }

@@ -67,8 +67,10 @@ public class DataBase {
         String sql = "CREATE TABLE IF NOT EXISTS Cells (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "Storage_id INTEGER," +
+                "Product_id INTEGER," +
                 "Product_quantity INTEGER," +
-                "FOREIGN KEY (Storage_id) REFERENCES Storages(ID)" +
+                "FOREIGN KEY (Storage_id) REFERENCES Storages(ID)," +
+                "FOREIGN KEY (Product_id) REFERENCES Products(ID)" +
                 ");";
 
         try (Statement stmt = connection.createStatement()) {
@@ -79,15 +81,18 @@ public class DataBase {
     private static void createOrdersTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Orders (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "Status TEXT," +
                 "Buyer_id INTEGER," +
                 "Product_id INTEGER," +
                 "Quantity INTEGER," +
                 "Total_price REAL," +
                 "Date TIMESTAMP," +
                 "Worker_id INTEGER," +
+                "Sale_point_id INTEGER," +
                 "FOREIGN KEY (Buyer_id) REFERENCES Buyers(ID)," +
                 "FOREIGN KEY (Product_id) REFERENCES Products(ID)," +
-                "FOREIGN KEY (Worker_id) REFERENCES Worker(ID)" +
+                "FOREIGN KEY (Worker_id) REFERENCES Workers(ID)," +
+                "FOREIGN KEY (Sale_point_id) REFERENCES Sale_points(ID)" +
                 ");";
 
         try (Statement stmt = connection.createStatement()) {
@@ -102,11 +107,7 @@ public class DataBase {
                 "Price REAL," +
                 "Sell_price REAL," +
                 "Status TEXT," +
-                "Storage_id INTEGER," +
-                "Cell_id INTEGER," +
                 "Producer_id INTEGER," +
-                "FOREIGN KEY (Storage_id) REFERENCES Storages(ID)," +
-                "FOREIGN KEY (Cell_id) REFERENCES Cells(ID)," +
                 "FOREIGN KEY (Producer_id) REFERENCES Producers(ID)" +
                 ");";
 
@@ -122,6 +123,7 @@ public class DataBase {
                 "Last_name TEXT," +
                 "Phone_number TEXT," +
                 "Work_place_id INTEGER," +
+                "Status TEXT," +
                 "FOREIGN KEY (Work_place_id) REFERENCES Sale_points(ID)" +
                 ");";
 

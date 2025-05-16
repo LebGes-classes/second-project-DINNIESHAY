@@ -14,32 +14,27 @@ public class ProductsAccess implements Access<Product> {
     public void add(Product product) throws SQLException {
         String sql = "INSERT INTO Products " +
                 "(Name, Price, Sell_price, " +
-                "Status, Storage_id, Cell_id, " +
-                "Producer_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "Status, Producer_id) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
             pstmt.setString(1, product.name);
             pstmt.setDouble(2, product.price);
             pstmt.setDouble(3, product.sellPrice);
             pstmt.setString(4, product.status);
-            pstmt.setInt(5, product.storageId);
-            pstmt.setInt(6, product.cellId);
-            pstmt.setInt(7, product.producerId);
+            pstmt.setInt(5, product.producerId);
             pstmt.executeUpdate();
         }
     }
 
     public void update(Product product) throws SQLException {
-        String sql = "UPDATE Products SET Name = ?, Price = ?, Sell_price = ?, Status = ?, Storage_id = ?, Cell_id = ?, Producer_id = ? WHERE ID = ?";
+        String sql = "UPDATE Products SET Name = ?, Price = ?, Sell_price = ?, Status = ?, Producer_id = ? WHERE ID = ?";
 
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
             pstmt.setString(1, product.name);
             pstmt.setDouble(2, product.price);
             pstmt.setDouble(3, product.sellPrice);
             pstmt.setString(4, product.status);
-            pstmt.setInt(5, product.storageId);
-            pstmt.setInt(6, product.cellId);
-            pstmt.setInt(7, product.producerId);
-            pstmt.setInt(8, product.id);
+            pstmt.setInt(5, product.producerId);
+            pstmt.setInt(6, product.id);
             pstmt.executeUpdate();
         }
     }
@@ -64,8 +59,6 @@ public class ProductsAccess implements Access<Product> {
                 product.setPrice(set.getDouble("Price"));
                 product.setSellPrice(set.getDouble("Sell_price"));
                 product.setStatus(set.getString("Status"));
-                product.setStorageId(set.getInt("Storage_id"));
-                product.setCellId(set.getInt("Cell_id"));
                 product.setProducerId(set.getInt("Producer_id"));
                 products.add(product);
             }
@@ -87,8 +80,6 @@ public class ProductsAccess implements Access<Product> {
                 product.setPrice(set.getDouble("Price"));
                 product.setSellPrice(set.getDouble("Sell_price"));
                 product.setStatus(set.getString("Status"));
-                product.setStorageId(set.getInt("Storage_id"));
-                product.setCellId(set.getInt("Cell_id"));
                 product.setProducerId(set.getInt("Producer_id"));
                 products.add(product);
             }
@@ -110,8 +101,6 @@ public class ProductsAccess implements Access<Product> {
                 product.setPrice(set.getDouble("Price"));
                 product.setSellPrice(set.getDouble("Sell_price"));
                 product.setStatus(set.getString("Status"));
-                product.setStorageId(set.getInt("Storage_id"));
-                product.setCellId(set.getInt("Cell_id"));
                 product.setProducerId(set.getInt("Producer_id"));
             }
         }

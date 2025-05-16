@@ -12,21 +12,23 @@ import java.util.ArrayList;
 public class CellsAccess implements Access<Cell> {
 
     public void add(Cell cell) throws SQLException {
-        String sql = "INSERT INTO Cells (Storage_id, Product_quantity) VALUES (?, ?)";
+        String sql = "INSERT INTO Cells (Storage_id, Product_id, Product_quantity) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
             pstmt.setInt(1, cell.storageId);
-            pstmt.setInt(2, cell.productQuantity);
+            pstmt.setInt(2, cell.productId);
+            pstmt.setInt(3, cell.productQuantity);
             pstmt.executeUpdate();
         }
     }
 
     public void update(Cell cell) throws SQLException {
-        String sql = "UPDATE Cells SET Storage_id = ?, Product_quantity = ? WHERE ID = ?";
+        String sql = "UPDATE Cells SET Storage_id = ?, Product_id = ?, Product_quantity = ? WHERE ID = ?";
 
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
             pstmt.setInt(1, cell.storageId);
-            pstmt.setInt(2, cell.productQuantity);
-            pstmt.setInt(3, cell.id);
+            pstmt.setInt(2, cell.productId);
+            pstmt.setInt(3, cell.productQuantity);
+            pstmt.setInt(4, cell.id);
             pstmt.executeUpdate();
         }
     }
@@ -48,6 +50,8 @@ public class CellsAccess implements Access<Cell> {
                 Cell cell = new Cell();
                 cell.setId(set.getInt("ID"));
                 cell.setStorageId(set.getInt("Storage_id"));
+                cell.setProductId(set.getInt("Product_id"));
+                cell.setQuantity(set.getInt("Product_quantity"));
                 cells.add(cell);
             }
         }
@@ -65,6 +69,8 @@ public class CellsAccess implements Access<Cell> {
                 Cell cell = new Cell();
                 cell.setId(set.getInt("ID"));
                 cell.setStorageId(set.getInt("Storage_id"));
+                cell.setProductId(set.getInt("Product_id"));
+                cell.setQuantity(set.getInt("Product_quantity"));
                 cells.add(cell);
             }
         }
@@ -82,6 +88,7 @@ public class CellsAccess implements Access<Cell> {
                 cell = new Cell();
                 cell.setId(set.getInt("ID"));
                 cell.setStorageId(set.getInt("Storage_id"));
+                cell.setProductId(set.getInt("Product_id"));
                 cell.setQuantity(set.getInt("Product_quantity"));
             }
         }
@@ -129,5 +136,26 @@ public class CellsAccess implements Access<Cell> {
         }
 
         return id;
+    }
+
+    public int getQuantityOfProductInStorage(int productId, int storageId) throws SQLException {
+        int quantity = 0;
+
+        ArrayList<Cell> cells = getAll("Storage_id = " + storageId + " AND Product_id = " + productId);
+        Cell cell = cells.getFirst();
+        quantity = cell.productQuantity;
+
+        return quantity;
+    }
+
+    public int getTotalQuantityOfProduct(int productId) throws SQLException {
+        int quantity = 0;
+
+        ArrayList<Cell> cells = getAll("Product_id = " + productId);
+        for (Cell cell : cells) {
+            quantity += cell.productQuantity;
+        }
+
+        return quantity;
     }
 }
