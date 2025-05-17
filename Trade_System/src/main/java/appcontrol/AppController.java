@@ -1,8 +1,8 @@
-package appControl;
+package appcontrol;
 
-import appControl.manager.*;
-import appControl.visual.services.Services;
-import appControl.visual.printer.Printer;
+import appcontrol.manager.*;
+import appcontrol.visual.services.Services;
+import appcontrol.visual.printer.Printer;
 import database.connection.DataBase;
 
 import java.sql.SQLException;
@@ -12,15 +12,11 @@ public class AppController {
     Printer printer = new Printer();
 
     public void openApp() throws SQLException {
+        //Соединение с базой данных
         DataBase.getConnection();
-        try {
-            DataBase.createTables();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         boolean isRunning = true;
-
+        //Пока пользователь не вышел из приложения, выводить меню
         while(isRunning) {
             printer.printMenu();
             String choice = Services.getInput();
@@ -50,7 +46,7 @@ public class AppController {
         }
         System.out.println("Exiting the program...\n");
     }
-
+    
     private void manageProducts() throws SQLException {
         boolean managing = true;
 

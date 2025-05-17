@@ -1,4 +1,4 @@
-package appControl.visual.services;
+package appcontrol.visual.services;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Services {
 
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void printFile(File file) {
         try {

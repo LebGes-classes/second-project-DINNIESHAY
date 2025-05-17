@@ -19,6 +19,7 @@ public class DataBase {
 
         try {
             connection = DriverManager.getConnection(url);
+            createTables();
         } catch (SQLException e) {
             System.out.println("Ошибка подключения: " + e.getMessage());
         }

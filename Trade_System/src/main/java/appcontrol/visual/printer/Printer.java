@@ -1,6 +1,6 @@
-package appControl.visual.printer;
+package appcontrol.visual.printer;
 
-import appControl.visual.services.Services;
+import appcontrol.visual.services.Services;
 
 import java.io.File;
 

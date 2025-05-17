@@ -1,6 +1,6 @@
-package appControl.manager;
+package appcontrol.manager;
 
-import appControl.visual.services.Services;
+import appcontrol.visual.services.Services;
 import company.order.Order;
 import company.product.Product;
 import company.storage.Cell;
@@ -20,23 +20,18 @@ public class OrdersManager {
     static CellsAccess cellsAccess = new CellsAccess();
     static BuyersAccess buyersAccess = new BuyersAccess();
     static OrdersAccess ordersAccess = new OrdersAccess();
-    static WorkersAccess workersAccess = new WorkersAccess();
 
     public static void makeOrder() throws SQLException {
         Order order = new Order();
 
         System.out.println("Choose your sale point:\n");
-        ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
-        if (salePoints.isEmpty()) {
+        if (StoragesManager.noSalePoints()) {
             System.out.println("No sale points");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (SalePoint salePoint : salePoints) {
-                System.out.print(salePoint);
-            }
         }
+        StoragesManager.printSalePoints();
         int salePointId = Integer.parseInt(Services.getInput());
         SalePoint salePoint = salePointsAccess.getById(salePointId);
         order.setSalePointId(salePointId);
@@ -64,16 +59,14 @@ public class OrdersManager {
         Product product = productsAccess.getById(Integer.parseInt(Services.getInput()));
         order.setProductId(product.id);
 
-        System.out.println("Choose employee:");
-        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff' OR Status = 'Admin'");
-        if (workers.isEmpty()) {
+        System.out.println("Choose employee:\n");
+        String condition = "Status = 'Staff' OR Status = 'Admin'";
+        if (WorkersManager.noWorkers(condition)) {
             System.out.println("No workers");
+            System.out.println("\nPress any key to go back");
             return;
-        } else {
-            for (Worker worker : workers) {
-                System.out.print(worker);
-            }
         }
+        WorkersManager.printWorkers(condition);
         int workerId = Integer.parseInt(Services.getInput());
         order.setWorkerId(workerId);
 
@@ -122,18 +115,14 @@ public class OrdersManager {
 
     public static void makeReturn() throws SQLException {
         System.out.println("Choose order you want to return:\n");
-        ArrayList<Order> orders = ordersAccess.getAll("Status = 'Received'");
-        if (orders.isEmpty()) {
+        String condition = "Status = 'Received'";
+        if (noOrders(condition)) {
             System.out.println("No orders");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-
-        } else {
-            for (Order order : orders) {
-                System.out.print(order);
-            }
         }
+        printOrders(condition);
         Order order = ordersAccess.getById(Integer.parseInt(Services.getInput()));
 
         Product product = productsAccess.getById(order.productId);
@@ -161,14 +150,10 @@ public class OrdersManager {
     }
 
     public static void printAllOrders() throws SQLException {
-        ArrayList<Order> orders = ordersAccess.getAll();
-        if (orders.isEmpty()) {
+        if (noOrders()) {
             System.out.println("No orders");
-        } else {
-            for (Order order : orders) {
-                System.out.print(order);
-            }
         }
+        printOrders();
 
         System.out.println("\nPress any key to go back");
         Services.getInput();
@@ -228,5 +213,33 @@ public class OrdersManager {
 
         System.out.println("\nPress any key to go back");
         Services.getInput();
+    }
+
+    public static void printOrders(String condition) throws SQLException {
+        ArrayList<Order> orders = ordersAccess.getAll(condition);
+        for (Order order : orders) {
+            System.out.print(order);
+        }
+    }
+
+    public static void printOrders() throws SQLException {
+        ArrayList<Order> orders = ordersAccess.getAll();
+        for (Order order : orders) {
+            System.out.print(order);
+        }
+    }
+
+    public static boolean noOrders(String condition) throws SQLException {
+        ArrayList<Order> orders = ordersAccess.getAll(condition);
+        boolean noOrders = orders.isEmpty();
+
+        return noOrders;
+    }
+
+    public static boolean noOrders() throws SQLException {
+        ArrayList<Order> orders = ordersAccess.getAll();
+        boolean noOrders = orders.isEmpty();
+
+        return noOrders;
     }
 }

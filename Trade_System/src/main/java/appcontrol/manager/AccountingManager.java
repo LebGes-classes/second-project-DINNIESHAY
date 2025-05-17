@@ -1,6 +1,6 @@
-package appControl.manager;
+package appcontrol.manager;
 
-import appControl.visual.services.Services;
+import appcontrol.visual.services.Services;
 import company.storage.salepoint.SalePoint;
 import database.access.SalePointsAccess;
 

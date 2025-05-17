@@ -9,7 +9,7 @@ public class Order {
     public int productId;
     public int quantity;
     public double totalPrice;
-    public LocalDateTime date;
+    public String date;
     public int workerId;
     public int salePointId;
     public String status;
@@ -37,7 +37,11 @@ public class Order {
     }
 
     public void setDate(LocalDateTime date) {
-        this.date = date;
+        this.date = date.withNano(0).toString().replace('T', ' ');;
+    }
+
+    public void setDate(String data) {
+        this.date = data;
     }
 
     public void setWorkerId(int workerId) {

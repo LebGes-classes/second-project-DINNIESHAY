@@ -1,4 +1,4 @@
-package appControl.visual.cleaner;
+package appcontrol.visual.cleaner;
 
 public class Cleaner {
 

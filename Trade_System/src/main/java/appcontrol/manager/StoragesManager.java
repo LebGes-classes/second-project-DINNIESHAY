@@ -1,6 +1,6 @@
-package appControl.manager;
+package appcontrol.manager;
 
-import appControl.visual.services.Services;
+import appcontrol.visual.services.Services;
 import company.product.Product;
 import company.storage.Cell;
 import company.storage.Storage;
@@ -22,31 +22,25 @@ public class StoragesManager {
 
     public static void changeAdmin() throws SQLException {
         System.out.println("Choose sale point to change admin:\n");
-        ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
-        if (salePoints.isEmpty()) {
+        if (noSalePoints()) {
             System.out.println("No sale points");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (SalePoint salePoint : salePoints) {
-                System.out.print(salePoint);
-            }
         }
-        SalePoint salePoint = salePointsAccess.getById(Integer.parseInt(Services.getInput()));
+        printSalePoints();
+        int salePointId = Integer.parseInt(Services.getInput());
+        SalePoint salePoint = salePointsAccess.getById(salePointId);
 
+        String condition = "Status = 'Staff'";
         System.out.println("Choose new admin:\n");
-        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff'");
-        if (workers.isEmpty()) {
+        if (WorkersManager.noWorkers(condition)) {
             System.out.println("No workers");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (Worker worker : workers) {
-                System.out.print(worker);
-            }
         }
+        WorkersManager.printWorkers(condition);
         int adminId = Integer.parseInt(Services.getInput());
 
         Worker oldAdmin = workersAccess.getById(salePoint.adminId);
@@ -85,17 +79,13 @@ public class StoragesManager {
 
     public static void closeStorage() throws SQLException {
         System.out.println("Choose storage to close:\n");
-        ArrayList<Storage> storages = storagesAccess.getAll();
-        if (storages.isEmpty()) {
+        if (noStorages()) {
             System.out.println("No storages");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (Storage storage: storages) {
-                System.out.println(storage);
-            }
         }
+        printStorages();
         int storageId = Integer.parseInt(Services.getInput());
 
         Worker worker = workersAccess.getById(workersAccess.getId("Work_place_id = " + storageId));
@@ -111,17 +101,13 @@ public class StoragesManager {
 
     public static void printWarehouseProductsInfo() throws SQLException {
         System.out.println("Choose warehouse:\n");
-        ArrayList<Storage> warehouses = storagesAccess.getAll("Type = 'Warehouse'");
-        if (warehouses.isEmpty()) {
+        if (noWarehouses()) {
             System.out.println("No warehouses");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (Storage warehouse: warehouses) {
-                System.out.println(warehouse);
-            }
         }
+        printWarehouses();
         int warehouseId = Integer.parseInt(Services.getInput());
 
         ArrayList<Cell> cells = cellsAccess.getAll("Storage_id = " + warehouseId);
@@ -145,17 +131,13 @@ public class StoragesManager {
 
     public static void printSalePointProductsInfo() throws SQLException {
         System.out.println("Choose sale point:\n");
-        ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
-        if (salePoints.isEmpty()) {
+        if (noSalePoints()) {
             System.out.println("No sale points");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (SalePoint salePoint : salePoints) {
-                System.out.print(salePoint);
-            }
         }
+        printSalePoints();
         int salePointId = Integer.parseInt(Services.getInput());
 
         ArrayList<Cell> cells = cellsAccess.getAll("Storage_id = " + salePointId);
@@ -178,15 +160,55 @@ public class StoragesManager {
     }
 
     public static void printAllStorages() throws SQLException {
-        ArrayList<Storage> storages = storagesAccess.getAll();
-        if (storages.isEmpty()) {
+        if (noStorages()) {
             System.out.println("No storages");
-        } else {
-            for (Storage storage: storages) {
-                System.out.print(storage + ", type: " + storagesAccess.getType(storage) + "\n");
-            }
         }
+        printStorages();
+
         System.out.println("\nPress any key to go back");
         Services.getInput();
+    }
+
+    public static boolean noStorages() throws SQLException {
+        ArrayList<Storage> storages = storagesAccess.getAll();
+        boolean noStorages = storages.isEmpty();
+
+        return noStorages;
+    }
+
+    public static boolean noSalePoints() throws SQLException {
+        ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
+        boolean noSalePoints = salePoints.isEmpty();
+
+        return noSalePoints;
+    }
+
+    public static boolean noWarehouses() throws SQLException {
+        ArrayList<Storage> warehouses = storagesAccess.getAll("Type = 'Warehouse'");
+        boolean noWarehouses = warehouses.isEmpty();
+
+        return noWarehouses;
+    }
+
+    public static void printStorages() throws SQLException {
+        ArrayList<Storage> storages = storagesAccess.getAll();
+        for (Storage storage : storages) {
+            System.out.print(storage + ", type: " + storagesAccess.getType(storage) + "\n");
+        }
+    }
+
+    public static void printSalePoints() throws SQLException {
+        ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
+        for (SalePoint salePoint : salePoints) {
+            System.out.print(salePoint);
+        }
+
+    }
+
+    public static void printWarehouses() throws SQLException {
+        ArrayList<Storage> warehouses = storagesAccess.getAll("Type = 'Warehouse'");
+        for (Storage warehouse : warehouses) {
+            System.out.println(warehouse);
+        }
     }
 }

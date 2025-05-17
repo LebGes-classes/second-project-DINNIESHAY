@@ -1,6 +1,6 @@
-package appControl.manager;
+package appcontrol.manager;
 
-import appControl.visual.services.Services;
+import appcontrol.visual.services.Services;
 import company.storage.salepoint.SalePoint;
 import company.user.worker.Worker;
 import database.access.SalePointsAccess;
@@ -45,18 +45,16 @@ public class WorkersManager {
     }
 
     public static void fireWorker() throws SQLException {
+        String condition = "Status = 'Staff' OR Status = 'Admin'";
+
         System.out.println("Choose worker to fire:\n");
-        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff' OR Status = 'Admin'");
-        if (workers.isEmpty()) {
+        if(noWorkers(condition)) {
             System.out.println("No workers");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (Worker worker : workers) {
-                System.out.print(worker);
-            }
         }
+        printWorkers(condition);
         Worker workerToFire = workersAccess.getById(Integer.parseInt(Services.getInput()));
         workerToFire.setStatus("Fired");
 
@@ -70,18 +68,16 @@ public class WorkersManager {
     }
 
     public static void changeWorkPlace() throws SQLException {
+        String condition = "Status = 'Staff'";
+
         System.out.println("Choose worker to change his work place:\n");
-        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff'");
-        if (workers.isEmpty()) {
+        if (noWorkers(condition)) {
             System.out.println("No workers");
             System.out.println("\nPress any key to go back");
             Services.getInput();
             return;
-        } else {
-            for (Worker worker : workers) {
-                System.out.print(worker);
-            }
         }
+        printWorkers(condition);
         Worker worker = workersAccess.getById(Integer.parseInt(Services.getInput()));
 
         System.out.println("Choose his new work place:\n");
@@ -102,16 +98,27 @@ public class WorkersManager {
     }
 
     public static void printAllWorkers() throws SQLException {
-        ArrayList<Worker> workers = workersAccess.getAll("Status = 'Staff' OR Status = 'Admin'");
-        if (workers.isEmpty()) {
+        String condition = "Status = 'Staff' OR Status = 'Admin'";
+        if (noWorkers(condition)) {
             System.out.println("No workers");
-        } else {
-            for (Worker worker : workers) {
-                System.out.print(worker);
-            }
         }
+        printWorkers(condition);
 
         System.out.println("\nPress any key to go back");
         Services.getInput();
+    }
+
+    public static void printWorkers(String condition) throws SQLException {
+        ArrayList<Worker> workers = workersAccess.getAll(condition);
+        for (Worker worker : workers) {
+            System.out.print(worker);
+        }
+    }
+
+    public static boolean noWorkers(String condition) throws SQLException {
+        ArrayList<Worker> workers = workersAccess.getAll(condition);
+        boolean noWorkers = workers.isEmpty();
+
+        return noWorkers;
     }
 }

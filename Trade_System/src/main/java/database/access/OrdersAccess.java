@@ -4,6 +4,8 @@ import company.order.Order;
 import database.connection.DataBase;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class OrdersAccess implements Access<Order> {
@@ -16,7 +18,7 @@ public class OrdersAccess implements Access<Order> {
             pstmt.setInt(3, order.productId);
             pstmt.setInt(4, order.quantity);
             pstmt.setDouble(5, order.totalPrice);
-            pstmt.setTimestamp(6, Timestamp.valueOf(order.date));
+            pstmt.setString(6, order.date);
             pstmt.setInt(7, order.workerId);
             pstmt.setInt(8, order.salePointId);
             pstmt.executeUpdate();
@@ -32,7 +34,7 @@ public class OrdersAccess implements Access<Order> {
             pstmt.setInt(3, order.productId);
             pstmt.setInt(4, order.quantity);
             pstmt.setDouble(5, order.totalPrice);
-            pstmt.setTimestamp(6, Timestamp.valueOf(order.date));
+            pstmt.setString(6, order.date);
             pstmt.setInt(7, order.workerId);
             pstmt.setInt(8, order.salePointId);
             pstmt.setInt(9, order.id);
@@ -62,7 +64,7 @@ public class OrdersAccess implements Access<Order> {
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
-                order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setDate(set.getString("Date"));
                 order.setWorkerId(set.getInt("Worker_id"));
                 order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
@@ -87,7 +89,7 @@ public class OrdersAccess implements Access<Order> {
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
-                order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setDate(set.getString("Date"));
                 order.setWorkerId(set.getInt("Worker_id"));
                 order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
@@ -112,7 +114,7 @@ public class OrdersAccess implements Access<Order> {
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
-                order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setDate(set.getString("Date"));
                 order.setWorkerId(set.getInt("Worker_id"));
                 order.setSalePointId(set.getInt("Sale_point_id"));
             }
@@ -136,7 +138,7 @@ public class OrdersAccess implements Access<Order> {
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
-                order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setDate(set.getString("Date"));
                 order.setWorkerId(set.getInt("Worker_id"));
                 order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
@@ -161,7 +163,7 @@ public class OrdersAccess implements Access<Order> {
                 order.setProductId(set.getInt("Product_id"));
                 order.setQuantity(set.getInt("Quantity"));
                 order.setTotalPrice(set.getDouble("Total_price"));
-                order.setDate(set.getTimestamp("Date").toLocalDateTime());
+                order.setDate(set.getString("Date"));
                 order.setWorkerId(set.getInt("Worker_id"));
                 order.setSalePointId(set.getInt("Sale_point_id"));
                 orders.add(order);
