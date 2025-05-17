@@ -7,10 +7,12 @@ import database.access.SalePointsAccess;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+//Класс для получения информации о бухгалтерии
 public class AccountingManager {
 
     static SalePointsAccess salePointsAccess = new SalePointsAccess();
 
+    //Вывод выручки пункта продаж
     public static void printSalePointRevenue() throws SQLException {
         System.out.println("Choose sale point:\n");
         ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
@@ -32,6 +34,7 @@ public class AccountingManager {
         Services.getInput();
     }
 
+    //Вывод выручки компании
     public static void printCompanyRevenue() throws SQLException {
         ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
         double totalRevenue = 0;

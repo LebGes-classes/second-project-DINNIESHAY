@@ -15,6 +15,7 @@ public class ProductsManager {
     static CellsAccess cellsAccess = new CellsAccess();
     static ProducersAccess producersAccess = new ProducersAccess();
 
+    //Показ доступных товаров
     public static void printAvailableProducts() throws SQLException {
         String condition = "Status = 'Available'";
         if (noProducts(condition)) {
@@ -26,6 +27,7 @@ public class ProductsManager {
         Services.getInput();
     }
 
+    //Показ купленных товаров
     public static void printSoldProducts() throws SQLException {
         String condition = "Status = 'Sold'";
         if (noProducts(condition)) {
@@ -37,6 +39,7 @@ public class ProductsManager {
         Services.getInput();
     }
 
+    //Добавление товара
     public static void addProduct() throws SQLException {
         Product product = new Product();
 
@@ -82,6 +85,7 @@ public class ProductsManager {
         cellsAccess.add(cell);
     }
 
+    //Закупка товара в склад
     public static void purchaseProduct() throws SQLException {
         System.out.println("Choose product you want to purchase:\n");
         if (noProducts()) {
@@ -122,6 +126,7 @@ public class ProductsManager {
         productsAccess.update(product);
     }
 
+    //Передвижение товара из склада в пункт продаж
     public static void moveToSalePoint() throws SQLException {
         System.out.println("Choose warehouse:\n");
         if (StoragesManager.noWarehouses()) {
@@ -188,6 +193,7 @@ public class ProductsManager {
         }
     }
 
+    //Передвижение товара из пункта продаж в склад
     public static void moveToWarehouse() throws SQLException {
         System.out.println("Choose sale point:\n");
         if (StoragesManager.noSalePoints()) {
@@ -254,6 +260,7 @@ public class ProductsManager {
         }
     }
 
+    //Передвижение товара из одного пункта продаж в другой
     public static void moveToOtherSalePoint() throws SQLException {
         System.out.println("Choose sale point:\n");
         if (StoragesManager.noSalePoints()) {
@@ -320,6 +327,7 @@ public class ProductsManager {
         }
     }
 
+    //Вспомогательные методы для проверки наличия товаров
     public static boolean noProducts() throws SQLException {
         ArrayList<Product> products = productsAccess.getAll();
         boolean noProducts = products.isEmpty();
@@ -334,6 +342,7 @@ public class ProductsManager {
         return noProducts;
     }
 
+    //Вспомогательные методы для вывода товаров
     public static void printProducts(String condition) throws SQLException {
         ArrayList<Product> products = productsAccess.getAll(condition);
         for (Product product : products) {

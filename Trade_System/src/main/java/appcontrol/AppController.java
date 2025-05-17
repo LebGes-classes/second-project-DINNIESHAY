@@ -46,7 +46,7 @@ public class AppController {
         }
         System.out.println("Exiting the program...\n");
     }
-    
+
     private void manageProducts() throws SQLException {
         boolean managing = true;
 

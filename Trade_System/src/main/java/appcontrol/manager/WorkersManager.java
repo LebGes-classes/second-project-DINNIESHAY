@@ -13,7 +13,7 @@ public class WorkersManager {
 
     static WorkersAccess workersAccess = new WorkersAccess();
     static SalePointsAccess salePointsAccess = new SalePointsAccess();
-
+    
     public static void addWorker() throws SQLException {
         Worker worker = new Worker();
 

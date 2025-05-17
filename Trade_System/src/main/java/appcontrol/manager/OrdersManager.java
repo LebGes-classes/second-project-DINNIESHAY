@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+//Класс для управления заказами
 public class OrdersManager {
 
     static SalePointsAccess salePointsAccess = new SalePointsAccess();
@@ -21,9 +22,11 @@ public class OrdersManager {
     static BuyersAccess buyersAccess = new BuyersAccess();
     static OrdersAccess ordersAccess = new OrdersAccess();
 
+    //Создание заказа
     public static void makeOrder() throws SQLException {
         Order order = new Order();
 
+        //Выбор пункта продаж из списка
         System.out.println("Choose your sale point:\n");
         if (StoragesManager.noSalePoints()) {
             System.out.println("No sale points");
@@ -36,6 +39,7 @@ public class OrdersManager {
         SalePoint salePoint = salePointsAccess.getById(salePointId);
         order.setSalePointId(salePointId);
 
+        //Выбор товара из пункта продаж
         System.out.println("Choose product to sell:\n");
         ArrayList<Cell> cells = cellsAccess.getAll("Storage_id = " + salePointId);
         ArrayList<Product> products = new ArrayList<>();
@@ -59,6 +63,7 @@ public class OrdersManager {
         Product product = productsAccess.getById(Integer.parseInt(Services.getInput()));
         order.setProductId(product.id);
 
+        //Выбор работника, который оформил заказ, из списка
         System.out.println("Choose employee:\n");
         String condition = "Status = 'Staff' OR Status = 'Admin'";
         if (WorkersManager.noWorkers(condition)) {
@@ -70,6 +75,7 @@ public class OrdersManager {
         int workerId = Integer.parseInt(Services.getInput());
         order.setWorkerId(workerId);
 
+        //Выбор количества товара для заказа
         Cell cell = cellsAccess.getById(cellsAccess.getId("Product_id = " + product.id + " AND Storage_id = " + salePointId));
         System.out.println("Available: " + cell.productQuantity);
         System.out.println("Enter quantity: ");
@@ -90,6 +96,7 @@ public class OrdersManager {
         order.setTotalPrice(totalPrice);
         salePoint.increaseRevenue(totalPrice);
 
+        //Ввод данных покупателя
         Buyer buyer = new Buyer();
         System.out.println("Enter buyer's first name: ");
         String firstName = Services.getInput();
@@ -104,16 +111,20 @@ public class OrdersManager {
         buyer.setId(buyersAccess.getId("First_name = '" + firstName + "' AND Last_name = '" + lastName + "'"));
         order.setBuyerId(buyer.id);
 
+        //Установка даты и времени заказа, статуса "Получен"
         order.setDate(LocalDateTime.now());
         order.setStatus("Received");
 
+        //Обновление базы данных
         productsAccess.update(product);
         salePointsAccess.update(salePoint);
 
         ordersAccess.add(order);
     }
 
+    //Оформление возврата товара
     public static void makeReturn() throws SQLException {
+        //Выбор заказа из списка
         System.out.println("Choose order you want to return:\n");
         String condition = "Status = 'Received'";
         if (noOrders(condition)) {
@@ -131,6 +142,7 @@ public class OrdersManager {
         SalePoint salePoint = salePointsAccess.getById(order.salePointId);
         salePoint.reduceRevenue(order.totalPrice);
 
+        //Возврат товара в существующую ячейку с таким же товаром или в новую
         Cell newCell = cellsAccess.getById(cellsAccess.getId("Storage_id = " + order.salePointId + " AND Product_id = " + product.id));
         if (newCell != null) {
             newCell.setQuantity(newCell.productQuantity + order.quantity);
@@ -141,14 +153,16 @@ public class OrdersManager {
             newCell.setProductId(product.id);
             cellsAccess.add(newCell);
         }
-
+        //Обновление базы данных
         productsAccess.update(product);
         salePointsAccess.update(salePoint);
 
+        //Установка статуса заказа на "Возвращен"
         order.setStatus("Returned");
         ordersAccess.update(order);
     }
 
+    //Показ всех заказов
     public static void printAllOrders() throws SQLException {
         if (noOrders()) {
             System.out.println("No orders");
@@ -159,7 +173,9 @@ public class OrdersManager {
         Services.getInput();
     }
 
+    //Показ заказов по покупателю
     public static void printOrdersByBuyer() throws SQLException {
+        //Выбор покупателя из списка
         System.out.println("Choose buyer:\n");
         ArrayList<Buyer> buyers = buyersAccess.getAll();
         if (buyers.isEmpty()) {
@@ -187,6 +203,7 @@ public class OrdersManager {
         Services.getInput();
     }
 
+    //Показ заказов по продукту
     public static void printOrdersByProduct() throws SQLException {
         System.out.println("Choose product:\n");
         ArrayList<Product> products = productsAccess.getAll();
@@ -215,6 +232,7 @@ public class OrdersManager {
         Services.getInput();
     }
 
+    //Вспомогательные методы для вывода заказов
     public static void printOrders(String condition) throws SQLException {
         ArrayList<Order> orders = ordersAccess.getAll(condition);
         for (Order order : orders) {
@@ -229,6 +247,7 @@ public class OrdersManager {
         }
     }
 
+    //Вспомогательные методы для проверки, есть ли заказы
     public static boolean noOrders(String condition) throws SQLException {
         ArrayList<Order> orders = ordersAccess.getAll(condition);
         boolean noOrders = orders.isEmpty();
