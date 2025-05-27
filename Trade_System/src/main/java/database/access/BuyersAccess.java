@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class BuyersAccess implements Access<Buyer> {
 
+    //Добавление покупателя в базу данных
     public void add(Buyer buyer) throws SQLException {
         if (getId("First_name = '" + buyer.firstName + "' AND Last_name = '" + buyer.lastName + "'") != 0) {
             return;
@@ -25,6 +26,7 @@ public class BuyersAccess implements Access<Buyer> {
         }
     }
 
+    //Обновление данных о покупателе в базе данных
     public void update(Buyer buyer) throws SQLException {
         String sql = "UPDATE Buyers SET First_name = ?, Last_name = ?, Phone_number = ? WHERE ID = ?";
 
@@ -37,6 +39,7 @@ public class BuyersAccess implements Access<Buyer> {
         }
     }
 
+    //Удаление покупателя из базы данных
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM Buyers WHERE ID = " + id;
         try (Statement stmt = DataBase.getConnection().createStatement()) {
@@ -44,6 +47,7 @@ public class BuyersAccess implements Access<Buyer> {
         }
     }
 
+    //Получение списка покупателей из базы данных
     public ArrayList<Buyer> getAll() throws SQLException {
         ArrayList<Buyer> buyers = new ArrayList<>();
         String sql = "SELECT * FROM Buyers";
@@ -63,6 +67,7 @@ public class BuyersAccess implements Access<Buyer> {
         return buyers;
     }
 
+    //Получение списка покупателей, удовлетворяющих условию
     public ArrayList<Buyer> getAll(String condition) throws SQLException {
         ArrayList<Buyer> buyers = new ArrayList<>();
         String sql = "SELECT * FROM Buyers WHERE " + condition;
@@ -82,6 +87,7 @@ public class BuyersAccess implements Access<Buyer> {
         return buyers;
     }
 
+    //Получение сотрудника по его id
     public Buyer getById(int id) throws SQLException {
         Buyer buyer = null;
         String sql = "SELECT * FROM Buyers WHERE ID = " + id;
@@ -100,6 +106,7 @@ public class BuyersAccess implements Access<Buyer> {
         return buyer;
     }
 
+    //Получение последнего добавленного id покупателя
     public int getLastAddedId() throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Buyers";
@@ -114,6 +121,7 @@ public class BuyersAccess implements Access<Buyer> {
         return lastAddedId;
     }
 
+    //Получение последнего добавленного id покупателя, удовлетворяющего условию
     public int getLastAddedId(String condition) throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Buyers WHERE " + condition;
@@ -128,6 +136,7 @@ public class BuyersAccess implements Access<Buyer> {
         return lastAddedId;
     }
 
+    //Получение id покупателя, удовлетворяющего условию
     public int getId(String condition) throws SQLException {
         int id = 0;
         String sql = "SELECT ID FROM Buyers WHERE " + condition;

@@ -6,7 +6,6 @@ import company.product.Product;
 import company.storage.Cell;
 import company.storage.salepoint.SalePoint;
 import company.user.buyer.Buyer;
-import company.user.worker.Worker;
 import database.access.*;
 
 import java.sql.SQLException;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 //Класс для управления заказами
 public class OrdersManager {
 
+    //Доступ к данным о пунктах продаж, товарах, ячейках, покупателях, заказах
     static SalePointsAccess salePointsAccess = new SalePointsAccess();
     static ProductsAccess productsAccess = new ProductsAccess();
     static CellsAccess cellsAccess = new CellsAccess();
@@ -28,6 +28,7 @@ public class OrdersManager {
 
         //Выбор пункта продаж из списка
         System.out.println("Choose your sale point:\n");
+        //При отсутсвии данных о пунктах продаж выводится сообщение об отсутствии пунктов продаж
         if (StoragesManager.noSalePoints()) {
             System.out.println("No sale points");
             System.out.println("\nPress any key to go back");
@@ -35,6 +36,7 @@ public class OrdersManager {
             return;
         }
         StoragesManager.printSalePoints();
+        //Получение ввода пользователя
         int salePointId = Integer.parseInt(Services.getInput());
         SalePoint salePoint = salePointsAccess.getById(salePointId);
         order.setSalePointId(salePointId);
@@ -49,6 +51,7 @@ public class OrdersManager {
                 products.add(product);
             }
         }
+        //При отсутсвии данных о продуктах выводится сообщение об отсутствии продуктов
         if (products.isEmpty()) {
             System.out.println("No product available");
             System.out.println("\nPress any key to go back");
@@ -232,7 +235,7 @@ public class OrdersManager {
         Services.getInput();
     }
 
-    //Вспомогательные методы для вывода заказов
+    //Вывод заказов, удовлетворяющих некоторому условию
     public static void printOrders(String condition) throws SQLException {
         ArrayList<Order> orders = ordersAccess.getAll(condition);
         for (Order order : orders) {
@@ -240,6 +243,7 @@ public class OrdersManager {
         }
     }
 
+    //Вывод всех заказов
     public static void printOrders() throws SQLException {
         ArrayList<Order> orders = ordersAccess.getAll();
         for (Order order : orders) {
@@ -247,7 +251,7 @@ public class OrdersManager {
         }
     }
 
-    //Вспомогательные методы для проверки, есть ли заказы
+    //Проверка на отсутствие заказов, удовлетворяющих некоторому условию
     public static boolean noOrders(String condition) throws SQLException {
         ArrayList<Order> orders = ordersAccess.getAll(condition);
         boolean noOrders = orders.isEmpty();
@@ -255,6 +259,7 @@ public class OrdersManager {
         return noOrders;
     }
 
+    //Проверка на отсутствие заказов
     public static boolean noOrders() throws SQLException {
         ArrayList<Order> orders = ordersAccess.getAll();
         boolean noOrders = orders.isEmpty();

@@ -22,6 +22,7 @@ public class StoragesManager {
 
     //Изменить ответственное лицо пункта продаж
     public static void changeAdmin() throws SQLException {
+        //Выбор пункта продаж, для которого нужно сменить администратора
         System.out.println("Choose sale point to change admin:\n");
         if (noSalePoints()) {
             System.out.println("No sale points");
@@ -33,6 +34,7 @@ public class StoragesManager {
         int salePointId = Integer.parseInt(Services.getInput());
         SalePoint salePoint = salePointsAccess.getById(salePointId);
 
+        //Выбор нового админа среди сотрудников, не являющихся админами
         String condition = "Status = 'Staff'";
         System.out.println("Choose new admin:\n");
         if (WorkersManager.noWorkers(condition)) {
@@ -44,6 +46,7 @@ public class StoragesManager {
         WorkersManager.printWorkers(condition);
         int adminId = Integer.parseInt(Services.getInput());
 
+        //Меняем статус старого админа
         Worker oldAdmin = workersAccess.getById(salePoint.adminId);
         if (oldAdmin != null) {
             oldAdmin.setStatus("Staff");
@@ -55,6 +58,7 @@ public class StoragesManager {
         newAdmin.setStatus("Admin");
         workersAccess.update(newAdmin);
 
+        //Обновление базы данных
         salePointsAccess.update(salePoint);
     }
 
@@ -65,6 +69,7 @@ public class StoragesManager {
         System.out.println("Enter address: ");
         warehouse.setStreet(Services.getInput());
 
+        //Добавлниие нового склада в базу данных
         storagesAccess.add(warehouse);
     }
 
@@ -75,6 +80,7 @@ public class StoragesManager {
         System.out.println("Enter address: ");
         salePoint.setStreet(Services.getInput());
 
+        //Добавление нового пункта продаж в базу данных
         storagesAccess.add(salePoint);
         salePoint.setId(storagesAccess.getLastAddedId());
         salePointsAccess.add(salePoint);
@@ -82,6 +88,7 @@ public class StoragesManager {
 
     //Закрытие склада
     public static void closeStorage() throws SQLException {
+        //Выбор склада для закрытия
         System.out.println("Choose storage to close:\n");
         if (noStorages()) {
             System.out.println("No storages");
@@ -99,11 +106,12 @@ public class StoragesManager {
             workersAccess.update(worker);
         }
 
+        //Обновление базы данных
         storagesAccess.delete(storageId);
         salePointsAccess.delete(storageId);
     }
 
-    //Вывести информацию о товарах склада
+    //Вывод информации о товарах склада
     public static void printWarehouseProductsInfo() throws SQLException {
         System.out.println("Choose warehouse:\n");
         if (noWarehouses()) {
@@ -134,8 +142,9 @@ public class StoragesManager {
         Services.getInput();
     }
 
-    //Вывести информацию о товарах пункта продаж
+    //Вывод информации о товарах пункта продаж
     public static void printSalePointProductsInfo() throws SQLException {
+        //Выбор пункта продаж
         System.out.println("Choose sale point:\n");
         if (noSalePoints()) {
             System.out.println("No sale points");
@@ -176,6 +185,7 @@ public class StoragesManager {
         Services.getInput();
     }
 
+    //Проверка на отсутствие хранилищ
     public static boolean noStorages() throws SQLException {
         ArrayList<Storage> storages = storagesAccess.getAll();
         boolean noStorages = storages.isEmpty();
@@ -183,6 +193,7 @@ public class StoragesManager {
         return noStorages;
     }
 
+    //Проверка на отсутствие пунктов продаж
     public static boolean noSalePoints() throws SQLException {
         ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
         boolean noSalePoints = salePoints.isEmpty();
@@ -190,6 +201,7 @@ public class StoragesManager {
         return noSalePoints;
     }
 
+    //Проверка на отсутствие складов
     public static boolean noWarehouses() throws SQLException {
         ArrayList<Storage> warehouses = storagesAccess.getAll("Type = 'Warehouse'");
         boolean noWarehouses = warehouses.isEmpty();
@@ -197,6 +209,7 @@ public class StoragesManager {
         return noWarehouses;
     }
 
+    //Вывод всех хранилищ с указанием типа
     public static void printStorages() throws SQLException {
         ArrayList<Storage> storages = storagesAccess.getAll();
         for (Storage storage : storages) {
@@ -204,6 +217,7 @@ public class StoragesManager {
         }
     }
 
+    //Вывод всех пунктов продаж
     public static void printSalePoints() throws SQLException {
         ArrayList<SalePoint> salePoints = salePointsAccess.getAll();
         for (SalePoint salePoint : salePoints) {
@@ -212,6 +226,7 @@ public class StoragesManager {
 
     }
 
+    //Вывод всех складов
     public static void printWarehouses() throws SQLException {
         ArrayList<Storage> warehouses = storagesAccess.getAll("Type = 'Warehouse'");
         for (Storage warehouse : warehouses) {

@@ -9,6 +9,7 @@ public class DataBase {
 
     static Connection connection = null;
 
+    //Получение соединения с базой данных SQL
     public static Connection getConnection() {
 
         if (connection != null) {
@@ -19,14 +20,17 @@ public class DataBase {
 
         try {
             connection = DriverManager.getConnection(url);
+            //При успешном соединении создаются таблицы, если они ещё не существуют
             createTables();
         } catch (SQLException e) {
-            System.out.println("Ошибка подключения: " + e.getMessage());
+            //При неуспешном соединении выводится сообщение об ошибке
+            System.out.println("Connection error: " + e.getMessage());
         }
 
         return connection;
     }
 
+    //Создание таблиц в базе данных, если они еще не существуют
     public static void createTables() throws SQLException {
         createWorkersTable();
         createStoragesTable();
@@ -38,6 +42,7 @@ public class DataBase {
         createProducersTable();
     }
 
+    //Создание таблицы Sale_points
     private static void createSalePointsTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Sale_points (" +
                 "ID INTEGER," +
@@ -52,6 +57,7 @@ public class DataBase {
         }
     }
 
+    //Создание таблицы Storages
     private static void createStoragesTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Storages (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -64,6 +70,7 @@ public class DataBase {
         }
     }
 
+    //Создание таблицы Cells
     private static void createCellsTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Cells (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -79,6 +86,7 @@ public class DataBase {
         }
     }
 
+    //Создание таблицы Orders
     private static void createOrdersTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Orders (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -101,6 +109,7 @@ public class DataBase {
         }
     }
 
+    //Создание таблицы Products
     private static void createProductsTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Products (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -117,6 +126,7 @@ public class DataBase {
         }
     }
 
+    //Создание таблицы Workers
     private static void createWorkersTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Workers (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -133,6 +143,7 @@ public class DataBase {
         }
     }
 
+    //Создание таблицы Buyers
     private static void createBuyersTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Buyers (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -146,6 +157,7 @@ public class DataBase {
         }
     }
 
+    //Создание таблицы Producers
     private static void createProducersTable() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS Producers (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT," +

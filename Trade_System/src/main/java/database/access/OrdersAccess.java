@@ -4,12 +4,11 @@ import company.order.Order;
 import database.connection.DataBase;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class OrdersAccess implements Access<Order> {
 
+    //Добавление заказа в базу данных с помощью SQL запроса
     public void add(Order order) throws SQLException {
         String sql = "INSERT INTO Orders (Status, Buyer_id, Product_id, Quantity, Total_price, Date, Worker_id, Sale_point_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
@@ -25,6 +24,7 @@ public class OrdersAccess implements Access<Order> {
         }
     }
 
+    //Обновление данных о заказе с помощью SQL запроса
     public void update(Order order) throws SQLException {
         String sql = "UPDATE Orders SET Status = ?, Buyer_id = ?, Product_id = ?, Quantity = ?, Total_price = ?, Date = ?, Worker_id = ?, Sale_point_id = ? WHERE ID = ?";
 
@@ -42,6 +42,7 @@ public class OrdersAccess implements Access<Order> {
         }
     }
 
+    //Удаление заказа
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM Orders WHERE ID = " + id;
         try (Statement stmt = DataBase.getConnection().createStatement()) {
@@ -49,6 +50,7 @@ public class OrdersAccess implements Access<Order> {
         }
     }
 
+    //Получение списка всех заказов из базы данных
     public ArrayList<Order> getAll() throws SQLException {
         ArrayList<Order> orders = new ArrayList<>();
 
@@ -74,6 +76,7 @@ public class OrdersAccess implements Access<Order> {
         return orders;
     }
 
+    //Получение списка всех заказов, удовлетворяющих условию, из базы данных
     public ArrayList<Order> getAll(String condition) throws SQLException {
         ArrayList<Order> orders = new ArrayList<>();
 
@@ -99,6 +102,7 @@ public class OrdersAccess implements Access<Order> {
         return orders;
     }
 
+    //Получение заказа по его id
     public Order getById(int id) throws SQLException {
         Order order = null;
 
@@ -123,6 +127,7 @@ public class OrdersAccess implements Access<Order> {
         return order;
     }
 
+    //Получение списка заказов одного покупателя
     public ArrayList<Order> getOrdersByBuyer(int buyerId) throws SQLException {
         ArrayList<Order> orders = new ArrayList<>();
 
@@ -148,6 +153,7 @@ public class OrdersAccess implements Access<Order> {
         return orders;
     }
 
+    //Получение списка заказов одного продукта
     public ArrayList<Order> getOrdersByProduct(int productId) throws SQLException {
         ArrayList<Order> orders = new ArrayList<>();
 
@@ -173,6 +179,7 @@ public class OrdersAccess implements Access<Order> {
         return orders;
     }
 
+    //Получение последнего добавленного в базу данных id
     public int getLastAddedId() throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Orders";
@@ -187,6 +194,7 @@ public class OrdersAccess implements Access<Order> {
         return lastAddedId;
     }
 
+    //Получение последнего добавленного в базу данных id заказа, удовлетворяющего условию
     public int getLastAddedId(String condition) throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Orders WHERE " + condition;
@@ -201,6 +209,7 @@ public class OrdersAccess implements Access<Order> {
         return lastAddedId;
     }
 
+    //Получение id заказа, удовлетворяющего условию
     public int getId(String condition) throws SQLException {
         int id = 0;
         String sql = "SELECT ID FROM Orders WHERE " + condition;

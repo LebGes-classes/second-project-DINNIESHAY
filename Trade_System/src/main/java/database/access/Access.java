@@ -3,6 +3,7 @@ package database.access;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+//Интерфейс классов, предоставляющих доступ к данным из базы данных SQL
 public interface Access<T> {
 
     void add(T object) throws SQLException;

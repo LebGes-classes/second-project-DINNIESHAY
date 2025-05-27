@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class ProductsAccess implements Access<Product> {
 
+    //Добавление товара в базу данных
     public void add(Product product) throws SQLException {
         String sql = "INSERT INTO Products " +
                 "(Name, Price, Sell_price, " +
@@ -25,6 +26,7 @@ public class ProductsAccess implements Access<Product> {
         }
     }
 
+    //Обновление данных о товаре в базе данных
     public void update(Product product) throws SQLException {
         String sql = "UPDATE Products SET Name = ?, Price = ?, Sell_price = ?, Status = ?, Producer_id = ? WHERE ID = ?";
 
@@ -39,6 +41,7 @@ public class ProductsAccess implements Access<Product> {
         }
     }
 
+    //Удаление товара из базы данных
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM Products WHERE ID = " + id;
         try (Statement stmt = DataBase.getConnection().createStatement()) {
@@ -46,6 +49,7 @@ public class ProductsAccess implements Access<Product> {
         }
     }
 
+    //Получение списка товаров из базы данных
     public ArrayList<Product> getAll() throws SQLException {
         ArrayList<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM Products";
@@ -67,6 +71,7 @@ public class ProductsAccess implements Access<Product> {
         return products;
     }
 
+    //Получение списка товаров из базы данных, удовлетворяющих условию
     public ArrayList<Product> getAll(String condition) throws SQLException {
         ArrayList<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE " + condition;
@@ -88,6 +93,7 @@ public class ProductsAccess implements Access<Product> {
         return products;
     }
 
+    //Получение товара по его id
     public Product getById(int id) throws SQLException {
         Product product = null;
         String sql = "SELECT * FROM Products WHERE ID = " + id;
@@ -108,6 +114,7 @@ public class ProductsAccess implements Access<Product> {
         return product;
     }
 
+    //Получение последнего добавленного id
     public int getLastAddedId() throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Products";
@@ -122,6 +129,7 @@ public class ProductsAccess implements Access<Product> {
         return lastAddedId;
     }
 
+    //Получение последнего добавленного id товара, удовлетворяющего условию
     public int getLastAddedId(String condition) throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Products WHERE " + condition;
@@ -136,6 +144,7 @@ public class ProductsAccess implements Access<Product> {
         return lastAddedId;
     }
 
+    //Получение id товара, удовлетворяющего условию
     public int getId(String condition) throws SQLException {
         int id = 0;
         String sql = "SELECT ID FROM Products WHERE " + condition;

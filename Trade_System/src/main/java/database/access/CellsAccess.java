@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class CellsAccess implements Access<Cell> {
 
+    //Добавление ячейки в базу данных с помощью SQL запроса
     public void add(Cell cell) throws SQLException {
         String sql = "INSERT INTO Cells (Storage_id, Product_id, Product_quantity) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
@@ -21,6 +22,7 @@ public class CellsAccess implements Access<Cell> {
         }
     }
 
+    //Обновление ячейки в базе данных с помощью SQL запроса
     public void update(Cell cell) throws SQLException {
         String sql = "UPDATE Cells SET Storage_id = ?, Product_id = ?, Product_quantity = ? WHERE ID = ?";
 
@@ -33,6 +35,7 @@ public class CellsAccess implements Access<Cell> {
         }
     }
 
+    //Удаление ячейки в базе данных с помощью SQL запроса
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM Cells WHERE ID = " + id;
         try (Statement stmt = DataBase.getConnection().createStatement()) {
@@ -40,6 +43,7 @@ public class CellsAccess implements Access<Cell> {
         }
     }
 
+    //Получение списка всех ячеек из базы данных
     public ArrayList<Cell> getAll() throws SQLException {
         ArrayList<Cell> cells = new ArrayList<>();
         String sql = "SELECT * FROM Cells";
@@ -59,6 +63,7 @@ public class CellsAccess implements Access<Cell> {
         return cells;
     }
 
+    //Получение списка всех ячеек, удовлетворяющих условию, из базы данных
     public ArrayList<Cell> getAll(String condition) throws SQLException {
         ArrayList<Cell> cells = new ArrayList<>();
         String sql = "SELECT * FROM Cells WHERE " + condition;
@@ -78,6 +83,7 @@ public class CellsAccess implements Access<Cell> {
         return cells;
     }
 
+    //Получение ячейки из базы данных по id
     public Cell getById(int id) throws SQLException {
         Cell cell = null;
         String sql = "SELECT * FROM Cells WHERE ID = " + id;
@@ -96,6 +102,7 @@ public class CellsAccess implements Access<Cell> {
         return cell;
     }
 
+    //Получение последнего добавленного id ячейки в базе данных
     public int getLastAddedId() throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Cells";
@@ -110,6 +117,7 @@ public class CellsAccess implements Access<Cell> {
         return lastAddedId;
     }
 
+    //Получение последнего добавленного id ячейки, удовлетворяющей условию, в базе данных
     public int getLastAddedId(String condition) throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Cells WHERE " + condition;
@@ -124,6 +132,7 @@ public class CellsAccess implements Access<Cell> {
         return lastAddedId;
     }
 
+    //Получение id ячейки по условию
     public int getId(String condition) throws SQLException {
         int id = 0;
         String sql = "SELECT ID FROM Cells WHERE " + condition;
@@ -138,6 +147,7 @@ public class CellsAccess implements Access<Cell> {
         return id;
     }
 
+    //Получение количества товара в ячейке
     public int getQuantityOfProductInStorage(int productId, int storageId) throws SQLException {
         int quantity = 0;
 
@@ -148,6 +158,7 @@ public class CellsAccess implements Access<Cell> {
         return quantity;
     }
 
+    //Получение общего количества товара во всех складах
     public int getTotalQuantityOfProduct(int productId) throws SQLException {
         int quantity = 0;
 

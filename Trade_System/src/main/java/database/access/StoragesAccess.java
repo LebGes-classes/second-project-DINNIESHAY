@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class StoragesAccess implements Access<Storage> {
 
+    //Добавление хранилища в базу данных
     public void add(Storage storage) throws SQLException {
         String sql = "INSERT INTO Storages (Type, Street) VALUES (?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
@@ -25,6 +26,7 @@ public class StoragesAccess implements Access<Storage> {
         }
     }
 
+    //Обновление данных о хранилище в базе данных
     public void update(Storage storage) throws SQLException {
         String sql = "UPDATE Storages SET Type = ?, Street = ? WHERE ID = ?";
 
@@ -40,6 +42,7 @@ public class StoragesAccess implements Access<Storage> {
         }
     }
 
+    //Удаление хранилища из базы данных
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM Storages WHERE ID = " + id;
         try (Statement stmt = DataBase.getConnection().createStatement()) {
@@ -47,6 +50,7 @@ public class StoragesAccess implements Access<Storage> {
         }
     }
 
+    //Получение списка всех хранилищ из базы данных
     public ArrayList<Storage> getAll() throws SQLException {
         ArrayList<Storage> storages = new ArrayList<>();
         String sql = "SELECT * FROM Storages";
@@ -64,6 +68,7 @@ public class StoragesAccess implements Access<Storage> {
         return storages;
     }
 
+    //Получение списка всех хранилищ, удовлетворяющих условию
     public ArrayList<Storage> getAll(String condition) throws SQLException {
         ArrayList<Storage> storages = new ArrayList<>();
         String sql = "SELECT * FROM Storages WHERE " + condition;
@@ -81,7 +86,7 @@ public class StoragesAccess implements Access<Storage> {
         return storages;
     }
 
-
+    //Получение хранилища по его id
     public Storage getById(int id) throws SQLException {
         Storage storage = null;
         String sql = "SELECT * FROM Storages WHERE ID = " + id;
@@ -98,6 +103,7 @@ public class StoragesAccess implements Access<Storage> {
         return storage;
     }
 
+    //Получение последнего добавленного id хранилища
     public int getLastAddedId() throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Storages";
@@ -112,6 +118,7 @@ public class StoragesAccess implements Access<Storage> {
         return lastAddedId;
     }
 
+    //Получение последнего добавленного id
     public int getLastAddedId(String condition) throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Storages WHERE " + condition;
@@ -126,6 +133,7 @@ public class StoragesAccess implements Access<Storage> {
         return lastAddedId;
     }
 
+    //Получение id хранилища, удовлетворяющего условию
     public int getId(String condition) throws SQLException {
         int id = 0;
         String sql = "SELECT ID FROM Storages WHERE " + condition;
@@ -140,6 +148,7 @@ public class StoragesAccess implements Access<Storage> {
         return id;
     }
 
+    //Получение типа хранилища
     public String getType(Storage storage) throws SQLException {
         String type = null;
         String sql = "SELECT Type FROM Storages WHERE ID = " + storage.id;

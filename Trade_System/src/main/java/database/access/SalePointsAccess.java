@@ -11,8 +11,10 @@ import java.util.ArrayList;
 
 public class SalePointsAccess implements Access<SalePoint> {
 
-    private StoragesAccess storagesAccess = new StoragesAccess();
+    //Доступ к базе данных пунктов продаж
+    private final StoragesAccess storagesAccess = new StoragesAccess();
 
+    //Добавление хранилища в базу данных
     public void add(SalePoint salePoint) throws SQLException {
         String sql = "INSERT INTO Sale_points (ID, Admin_id, Revenue) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = DataBase.getConnection().prepareStatement(sql)) {
@@ -23,6 +25,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         }
     }
 
+    //Обновление данных о пункте продаж
     public void update(SalePoint salePoint) throws SQLException {
         String sql = "UPDATE Sale_points SET Admin_id = ?, Revenue = ? WHERE ID = ?";
 
@@ -34,6 +37,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         }
     }
 
+    //Удаление пункта продаж в базе данных
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM Sale_points WHERE ID = " + id;
         try (Statement stmt = DataBase.getConnection().createStatement()) {
@@ -41,6 +45,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         }
     }
 
+    //Получение списка всех пунктов продаж из базы данных
     public ArrayList<SalePoint> getAll() throws SQLException {
         ArrayList<SalePoint> salePoints = new ArrayList<>();
         String sql = "SELECT * FROM Sale_points";
@@ -60,6 +65,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         return salePoints;
     }
 
+    ////Получение списка всех пунктов продаж, удовлетворяющих условию, из базы данных
     public ArrayList<SalePoint> getAll(String condition) throws SQLException {
         ArrayList<SalePoint> salePoints = new ArrayList<>();
         String sql = "SELECT * FROM Sale_points WHERE " + condition;
@@ -79,6 +85,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         return salePoints;
     }
 
+    //Получение пункта продаж по его id
     public SalePoint getById(int id) throws SQLException {
         SalePoint salePoint = null;
         String sql = "SELECT * FROM Sale_points WHERE ID = " + id;
@@ -97,6 +104,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         return salePoint;
     }
 
+    //Получение последнего добавленного в базу данных id
     public int getLastAddedId() throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Sale_points";
@@ -111,6 +119,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         return lastAddedId;
     }
 
+    //Получение последнего добавленного id пункта продаж, удовлетворяющего условию
     public int getLastAddedId(String condition) throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Sale_points WHERE " + condition;
@@ -125,6 +134,7 @@ public class SalePointsAccess implements Access<SalePoint> {
         return lastAddedId;
     }
 
+    //Получение id пункта продаж, удовлетворяющего условию
     public int getId(String condition) throws SQLException {
         int id = 0;
         String sql = "SELECT ID FROM Sale_points WHERE " + condition;

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class ProducersAccess implements Access<Producer> {
 
+    //Добавление производителя в базу данных
     public void add(Producer producer) throws SQLException {
         if (getId("Name = '" + producer.name + "'") != 0) {
             return;
@@ -23,6 +24,7 @@ public class ProducersAccess implements Access<Producer> {
         }
     }
 
+    //Обновление данных о производителе в базе данных
     public void update(Producer producer) throws SQLException {
         String sql = "UPDATE Producers SET Name = ? WHERE ID = ?";
 
@@ -33,6 +35,7 @@ public class ProducersAccess implements Access<Producer> {
         }
     }
 
+    //Удаление производителя в базе данных
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM Producers WHERE ID = " + id;
         try (Statement stmt = DataBase.getConnection().createStatement()) {
@@ -40,6 +43,7 @@ public class ProducersAccess implements Access<Producer> {
         }
     }
 
+    //Получение списка всех производителей из базы данных
     public ArrayList<Producer> getAll() throws SQLException {
         ArrayList<Producer> producers = new ArrayList<>();
         String sql = "SELECT * FROM Producers";
@@ -57,6 +61,7 @@ public class ProducersAccess implements Access<Producer> {
         return producers;
     }
 
+    //Получение списка всех производителей из базы данных, удовлетворяющих условию
     public ArrayList<Producer> getAll(String condition) throws SQLException {
         ArrayList<Producer> producers = new ArrayList<>();
         String sql = "SELECT * FROM Producers WHERE " + condition;
@@ -74,6 +79,7 @@ public class ProducersAccess implements Access<Producer> {
         return producers;
     }
 
+    //Получение производителя по id
     public Producer getById(int id) throws SQLException {
         Producer producer = null;
         String sql = "SELECT * FROM Producers WHERE ID = " + id;
@@ -90,6 +96,7 @@ public class ProducersAccess implements Access<Producer> {
         return producer;
     }
 
+    //Получение последнего добавленного id в базе данных
     public int getLastAddedId() throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Producers";
@@ -104,6 +111,7 @@ public class ProducersAccess implements Access<Producer> {
         return lastAddedId;
     }
 
+    ////Получение последнего добавленного id в базе данных, удовлетворяющего условию
     public int getLastAddedId(String condition) throws SQLException {
         int lastAddedId = 0;
         String sql = "SELECT MAX(ID) FROM Producers WHERE " + condition;
@@ -118,6 +126,7 @@ public class ProducersAccess implements Access<Producer> {
         return lastAddedId;
     }
 
+    //Получение id производителя, удовлетворяющего условию
     public int getId(String condition) throws SQLException {
         int id = 0;
         String sql = "SELECT ID FROM Producers WHERE " + condition;

@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+//Класс вспомогательных методов
 public class Services {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+    //Вывод текста из файла
     public static void printFile(File file) {
         try {
             Scanner fileReader = new Scanner(file);
@@ -20,6 +22,7 @@ public class Services {
         }
     }
 
+    //Получение ввода пользователя
     public static String getInput() {
         return scanner.nextLine();
     }
